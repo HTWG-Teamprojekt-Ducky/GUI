@@ -40,7 +40,7 @@ def gen_map(name):
     
     print(dimension[0], dimension[1])
     canvas = tk.Canvas(width=dimension[0], height=dimension[1], bg='black')
-    canvas.grid(row=0, column=1)
+    canvas.grid(row=1, column=1)
               
     for row in range(len(imap['tiles'])):
         for column in range(len(imap['tiles'][0])):
@@ -59,7 +59,7 @@ def load_map():
     
     gen_map(map_file)
 
-tk.Button(text='Load map (.yaml)', command=load_map).grid(row=0, column=2)
+tk.Button(text='Load map (.yaml)', command=load_map).grid(row=0, column=1)
 
 gen_map('udem1')
 root.mainloop()
