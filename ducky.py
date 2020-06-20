@@ -57,6 +57,7 @@ def gen_map(name):
     y = 0
     
     c1 = canvas.create_rectangle(x, y, x + 15, y + 15, fill="yellow")
+    canvas.create_line(0, 0, 960, 960, fill='pink', width=5)
 
 def load_map():
     root.filename = filedialog.askopenfilename(initialdir="maps/", title="Select map",
