@@ -42,9 +42,9 @@ def gen_map(name):
     except:
         pass
 
-    print(dimension[0], dimension[1])
     canvas = tk.Canvas(width=dimension[0], height=dimension[1], bg='black')
-    canvas.grid(row=0, column=1)
+    canvas.grid(row=1, column=1)
+    
     for row in range(len(imap['tiles'])):
         for column in range(len(imap['tiles'][0])):
             image_file = get_image(imap['tiles'][row][column])
@@ -53,10 +53,10 @@ def gen_map(name):
             one.append(ImageTk.PhotoImage(resized_image))
             canvas.create_image(column * 120 + 60, row * 120 + 60, image=one[-1])
 
-    x = 5
-    y = 5
+    x = 0
+    y = 0
+    
     c1 = canvas.create_rectangle(x, y, x + 15, y + 15, fill="yellow")
-
 
 def load_map():
     root.filename = filedialog.askopenfilename(initialdir="maps/", title="Select map",
@@ -65,22 +65,24 @@ def load_map():
 
     gen_map(map_file)
 
-tk.Button(text='Load map (.yaml)', command=load_map).grid(row=0, column=1)
+tk.Button(text='Load map (.yaml)', command=load_map).grid(row=0, column=1, sticky='W', padx=15, pady=15)
 
 def keypress(event):
     x = 0
     y = 0
+    
     if event.char == "a":
-        x = -10
+        x = -15
     elif event.char == "d":
-        x = 10
+        x = 15
     elif event.char == "w":
-        y = -10
+        y = -15
     elif event.char == "s":
-        y = 10
+        y = 15
     canvas.move(c1, x, y)
 
 
 root.bind("<Key>", keypress)
 gen_map('udem1')
+
 root.mainloop()
