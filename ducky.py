@@ -44,7 +44,7 @@ def gen_map(name):
 
     canvas = tk.Canvas(width=dimension[0], height=dimension[1], bg='black')
     canvas.grid(row=1, column=1)
-    
+
     for row in range(len(imap['tiles'])):
         for column in range(len(imap['tiles'][0])):
             image_file = get_image(imap['tiles'][row][column])
@@ -55,9 +55,10 @@ def gen_map(name):
 
     x = 0
     y = 0
-    
+
     c1 = canvas.create_rectangle(x, y, x + 15, y + 15, fill="yellow")
     canvas.create_line(0, 0, 960, 960, fill='pink', width=5)
+
 
 def load_map():
     root.filename = filedialog.askopenfilename(initialdir="maps/", title="Select map",
@@ -66,12 +67,16 @@ def load_map():
 
     gen_map(map_file)
 
+    draw_grid_board(canvas)
+
+
 tk.Button(text='Load map (.yaml)', command=load_map).grid(row=0, column=1, sticky='W', padx=15, pady=15)
+
 
 def keypress(event):
     x = 0
     y = 0
-    
+
     if event.char == "a":
         x = -15
     elif event.char == "d":
@@ -83,7 +88,25 @@ def keypress(event):
     canvas.move(c1, x, y)
 
 
+def draw_grid_board(canvas):
+    # draw grid on grid
+    x1 = 0
+    x2 = 1000
+    for k in range(0, 1000, 15):
+        y1 = k
+        y2 = k
+        canvas.create_line(x1, y1, x2, y2)
+    # draw vertical lines
+    y1 = 0
+    y2 = 1000
+    for k in range(0, 1000, 15):
+        x1 = k
+        x2 = k
+        canvas.create_line(x1, y1, x2, y2)
+
+
 root.bind("<Key>", keypress)
 gen_map('udem1')
+draw_grid_board(canvas)
 
 root.mainloop()
