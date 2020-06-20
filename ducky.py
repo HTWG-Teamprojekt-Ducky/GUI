@@ -91,6 +91,7 @@ def draw_grid_board(canvas):
     # draw grid on grid
     x1 = 0
     x2 = 1000
+    # draw horizontal lines
     for k in range(0, 1000, 15):
         y1 = k
         y2 = k
