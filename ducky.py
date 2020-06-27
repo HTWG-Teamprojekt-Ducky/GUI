@@ -4,7 +4,7 @@ import yaml
 from PIL import ImageTk, Image
 
 global canvas
-global c1
+global ducky
 
 one = []
 root = tk.Tk()
@@ -30,7 +30,7 @@ def get_image(name):
 
 def gen_map(name):
     global canvas
-    global c1
+    global ducky
 
     with open('maps/{}.yaml'.format(name), 'r') as map_file:
         imap = yaml.load(map_file, Loader=yaml.FullLoader)
@@ -56,8 +56,7 @@ def gen_map(name):
     x = 0
     y = 0
 
-    c1 = canvas.create_rectangle(x, y, x + 15, y + 15, fill="yellow")
-    canvas.create_line(0, 0, 960, 960, fill='pink', width=5)
+    ducky = canvas.create_rectangle(x, y, x + 30, y + 50, fill="red")  # calculated size of ducky
 
 
 def load_map():
@@ -78,14 +77,15 @@ def keypress(event):
     y = 0
 
     if event.char == "a":
-        x = -15
+        x = -5
     elif event.char == "d":
-        x = 15
+        x = 5
     elif event.char == "w":
-        y = -15
+        y = -5
     elif event.char == "s":
-        y = 15
-    canvas.move(c1, x, y)
+        y = 5
+    canvas.move(ducky, x, y)
+    print(canvas.coords(ducky))
 
 
 def draw_grid_board(canvas):
@@ -93,21 +93,32 @@ def draw_grid_board(canvas):
     x1 = 0
     x2 = 1000
     # draw horizontal lines
-    for k in range(0, 1000, 15):
+    for k in range(0, 1000, 5):
         y1 = k
         y2 = k
-        canvas.create_line(x1, y1, x2, y2)
+        canvas.create_line(x1, y1, x2, y2, fill="#888888")
     # draw vertical lines
     y1 = 0
     y2 = 1000
-    for k in range(0, 1000, 15):
+    for k in range(0, 1000, 5):
         x1 = k
         x2 = k
-        canvas.create_line(x1, y1, x2, y2)
+        canvas.create_line(x1, y1, x2, y2, fill="#888888")
+
+
+def global_to_local_coordinates(x, y):
+    return x, y
+
+
+def place_coordinates(canvas):
+    # take canvas as root
+    coords = [(0, 0), (0, 5), (0, 10), (0, 15), (0, 20), (0, 25), (0, 30), (0, 35), (0, 40), (0, 45), (0, 45)]
+    for c in coords:
+        label = canvas.create_rectangle(120, 120, 150, 170, fill="yellow")
 
 
 root.bind("<Key>", keypress)
 gen_map('udem1')
+place_coordinates(canvas)
 draw_grid_board(canvas)
-
 root.mainloop()
