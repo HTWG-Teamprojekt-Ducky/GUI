@@ -121,4 +121,18 @@ root.bind("<Key>", keypress)
 gen_map('udem1')
 place_coordinates(canvas)
 draw_grid_board(canvas)
+
+
+
+maze = [[0, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 1, 0, 1, 0, 0],
+            [0, 1, 0, 0, 1, 0],
+            [0, 0, 0, 0, 1, 0]]
+    
+start = [0, 0] # starting position
+end = [4,5] # ending position
+cost = 1 # cost per movement
+
+
 root.mainloop()

@@ -178,17 +178,6 @@ def search(maze, cost, start, end):
             yet_to_visit_list.append(child)
 
 
-if __name__ == '__main__':
-
-    maze = [[0, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 1, 0, 1, 0, 0],
-            [0, 1, 0, 0, 1, 0],
-            [0, 0, 0, 0, 1, 0]]
-    
-    start = [0, 0] # starting position
-    end = [4,5] # ending position
-    cost = 1 # cost per movement
-
+def find_way(maze, start, end, cost):
     path = search(maze,cost, start, end)
-    print(path)
+    return path
