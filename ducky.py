@@ -11,6 +11,14 @@ root = tk.Tk()
 root.title('Ducky GUI')
 root.geometry('1920x1080')
 
+# test data for scaling
+array_of_local_coordinates = [(1.4, 1.4), (1.4, 1.5), (1.4, 1.6), (1.4, 1.7), (1.4, 1.8), (1.4, 1.9), (2.4, 2.0),
+                              (2.4, 2.1), (2.4, 2.2), (2.4, 2.3)]
+
+elements = []
+scaled_coordinates_ = {}
+gui_final_coordinates_ = {}
+
 
 def calc_mapsize(imap):
     height = len(imap['tiles']) * 120
@@ -56,7 +64,7 @@ def gen_map(name):
     x = 0
     y = 0
 
-    ducky = canvas.create_rectangle(x, y, x + 30, y + 50, fill="red")  # calculated size of ducky
+    ducky = canvas.create_rectangle(x, y, x + 42, y + 72, fill="red")  # calculated size of ducky
 
 
 def load_map():
@@ -69,7 +77,7 @@ def load_map():
     draw_grid_board(canvas)
 
 
-tk.Button(text='Load map (.yaml)', command=load_map).grid(row=0, column=1, sticky='W', padx=15, pady=15)
+# stk.Button(text='Load map (.yaml)', command=load_map).grid(row=0, column=1, sticky='W', padx=15, pady=15)
 
 
 def keypress(event):
@@ -77,13 +85,13 @@ def keypress(event):
     y = 0
 
     if event.char == "a":
-        x = -5
+        x = -6
     elif event.char == "d":
-        x = 5
+        x = 6
     elif event.char == "w":
-        y = -5
+        y = -6
     elif event.char == "s":
-        y = 5
+        y = 6
     canvas.move(ducky, x, y)
     print(canvas.coords(ducky))
 
@@ -93,21 +101,72 @@ def draw_grid_board(canvas):
     x1 = 0
     x2 = 1000
     # draw horizontal lines
-    for k in range(0, 1000, 5):
+    for k in range(0, 1000, 6):
         y1 = k
         y2 = k
         canvas.create_line(x1, y1, x2, y2, fill="#888888")
     # draw vertical lines
     y1 = 0
     y2 = 1000
-    for k in range(0, 1000, 5):
+    for k in range(0, 1000, 6):
         x1 = k
         x2 = k
         canvas.create_line(x1, y1, x2, y2, fill="#888888")
 
 
-def global_to_local_coordinates(x, y):
-    return x, y
+def global_to_scaled_coordinates(list_of_coordinates):
+    # take global coordinates and add the cordinates with 0.1 for scaling
+    for element in list_of_coordinates:
+
+        gui_coordinates = []
+        for coordinates in element:
+            integer_part, decimal_part = map(int, str(coordinates).split(".", 1))
+
+            # global tiles coordinates remain same while scaling
+            # the elements inside the tiles needs to scaled, so we can see properly
+            scaled_integer_part = integer_part
+            scaled_decimal_part1 = decimal_part + decimal_part
+            scaled_decimal_part2 = decimal_part + decimal_part + 1
+
+            # TODO:format to keep trailing zeros
+            scaled_coordinate1 = (float(str(scaled_integer_part) + "." + str(scaled_decimal_part1)))
+            scaled_coordinate2 = (float(str(scaled_integer_part) + "." + str(scaled_decimal_part2)))
+
+            gui_coordinates.append((scaled_coordinate1, scaled_coordinate2))
+
+        scaled_coordinates_[element] = gui_coordinates
+
+
+# print(scaled_coordinates_)
+
+
+def scaled_to_gui_coordinates(scaled_coordinates):
+    for element in scaled_coordinates:
+
+        gui_coordinates = []
+
+        for scaled_coordinates in element:
+
+            integer_part, decimal_part = map(int, str(scaled_coordinates).split(".", 1))
+
+            if integer_part == 0:
+                scaled_integer_part = integer_part
+            else:
+                scaled_integer_part = integer_part + 120
+
+            scaled_decimal_part = decimal_part * 6
+            final_scaled_x_and_y = scaled_integer_part + scaled_decimal_part
+            gui_coordinates.append((final_scaled_x_and_y))
+
+        gui_final_coordinates_[element] = gui_coordinates
+
+    print(gui_final_coordinates_)
+
+
+def convert_to_ducky_four_coordinates(x, y):
+    x1 = 0
+    y1 = 0
+    return x, y, x1, y1
 
 
 def place_coordinates(canvas):
@@ -121,18 +180,6 @@ root.bind("<Key>", keypress)
 gen_map('udem1')
 place_coordinates(canvas)
 draw_grid_board(canvas)
-
-
-
-maze = [[0, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 1, 0, 1, 0, 0],
-            [0, 1, 0, 0, 1, 0],
-            [0, 0, 0, 0, 1, 0]]
-    
-start = [0, 0] # starting position
-end = [4,5] # ending position
-cost = 1 # cost per movement
-
-
+global_to_scaled_coordinates(array_of_local_coordinates)
+scaled_to_gui_coordinates(scaled_coordinates_)
 root.mainloop()
