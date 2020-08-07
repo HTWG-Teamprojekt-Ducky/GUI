@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 import yaml
 from PIL import ImageTk, Image
+from modules import astar
 
 global canvas
 global ducky
@@ -64,7 +65,7 @@ def gen_map(name):
     x = 0
     y = 0
 
-    ducky = canvas.create_rectangle(x, y, x + 42, y + 72, fill="red")  # calculated size of ducky
+    ducky = canvas.create_rectangle(x, y, x + 5, y + 5, fill="red")  # calculated size of ducky
 
 
 def load_map():
@@ -79,21 +80,46 @@ def load_map():
 
 # stk.Button(text='Load map (.yaml)', command=load_map).grid(row=0, column=1, sticky='W', padx=15, pady=15)
 
+display_x = 0
+display_y = 0
+
+text_y = tk.StringVar()
+tk.Button(root, textvariable=text_y).grid(row=0, column=1, sticky='W', padx=165, pady=15)
+text_y.set('Y-Koordinate: 0')
+
+text_x = tk.StringVar()
+tk.Button(root, textvariable=text_x).grid(row=0, column=1, sticky='W', padx=15, pady=15)
+text_x.set('X-Koordinate: 0')
 
 def keypress(event):
+    global display_x
+    global display_y
+
     x = 0
     y = 0
 
     if event.char == "a":
         x = -6
+        display_x = display_x - 1
+        text_x.set('X-Koordinate: ' + str(display_x / 2))
     elif event.char == "d":
         x = 6
+        display_x = display_x + 1
+        text_x.set('X-Koordinate: ' + str(display_x / 2))
     elif event.char == "w":
         y = -6
+        display_y = display_y - 1
+        text_y.set('Y-Koordinate: ' + str(display_y / 2))
     elif event.char == "s":
         y = 6
+        display_y = display_y + 1
+        text_y.set('Y-Koordinate: ' + str(display_y / 2))
+
     canvas.move(ducky, x, y)
+
     print(canvas.coords(ducky))
+
+
 
 
 def draw_grid_board(canvas):
@@ -136,10 +162,6 @@ def global_to_scaled_coordinates(list_of_coordinates):
 
         scaled_coordinates_[element] = gui_coordinates
 
-
-# print(scaled_coordinates_)
-
-
 def scaled_to_gui_coordinates(scaled_coordinates):
     for element in scaled_coordinates:
 
@@ -177,9 +199,29 @@ def place_coordinates(canvas):
 
 
 root.bind("<Key>", keypress)
+
 gen_map('udem1')
+
+START = [35, 15]
+END   = [40, 55]
+
+line = astar.main(START, END)
+def draw_dots(canvas):
+    # 0, 0
+
+    for l in line:
+        x = (4 + 4 + 4) * l[1] # 4 = 0,
+        y = (4 + 4 + 4) * l[0]
+
+        x1, y1 = (x - 3), (y - 3)
+        x2, y2 = (x + 3), (y + 3)
+        canvas.create_oval(x1, y1, x2, y2, fill="#00ffff")
+
+draw_dots(canvas)
+
 place_coordinates(canvas)
 draw_grid_board(canvas)
 global_to_scaled_coordinates(array_of_local_coordinates)
 scaled_to_gui_coordinates(scaled_coordinates_)
+
 root.mainloop()

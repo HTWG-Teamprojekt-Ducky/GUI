@@ -1,15 +1,7 @@
-import numpy as np
+import yaml
+from timeit import repeat
 
 class Node:
-    """
-        A node class for A* Pathfinding
-        parent is parent of the current Node
-        position is current position of the Node in the maze
-        g is cost from start to current Node
-        h is heuristic based estimated cost for current Node to end Node
-        f is total cost of present node i.e. :  f = g + h
-    """
-
     def __init__(self, parent=None, position=None):
         self.parent = parent
         self.position = position
@@ -17,167 +9,176 @@ class Node:
         self.g = 0
         self.h = 0
         self.f = 0
+
     def __eq__(self, other):
         return self.position == other.position
 
-#This function return the path of the search
-def return_path(current_node,maze):
-    path = []
-    no_rows, no_columns = np.shape(maze)
-    # here we create the initialized result maze with -1 in every position
-    result = [[-1 for i in range(no_columns)] for j in range(no_rows)]
-    current = current_node
-    while current is not None:
-        path.append(current.position)
-        current = current.parent
-    # Return reversed path as we need to show from start to end path
-    path = path[::-1]
-    start_value = 0
-    # we update the path of start to end found by A-star serch with every step incremented by 1
-    for i in range(len(path)):
-        result[path[i][0]][path[i][1]] = start_value
-        start_value += 1
-    return result
 
+def aStar(maze, start, end):
+    # startNode와 endNode 초기화
+    startNode = Node(None, start)
+    startNode.g = startNode.h = startNode.f = 0
+    endNode = Node(None, end)
+    endNode.g = endNode.h = endNode.f = 0
 
-def search(maze, cost, start, end):
-    """
-        Returns a list of tuples as a path from the given start to the given end in the given maze
-        :param maze:
-        :param cost
-        :param start:
-        :param end:
-        :return:
-    """
+    # openList, ClosedList 초기화
+    openList = []
+    closedList = []
 
-    # Create start and end node with initized values for g, h and f
-    start_node = Node(None, tuple(start))
-    start_node.g = start_node.h = start_node.f = 0
-    end_node = Node(None, tuple(end))
-    end_node.g = end_node.h = end_node.f = 0
+    # openList에 시작 노드 추가
+    openList.append(startNode)
 
-    # Initialize both yet_to_visit and visited list
-    # in this list we will put all node that are yet_to_visit for exploration. 
-    # From here we will find the lowest cost node to expand next
-    yet_to_visit_list = []  
-    # in this list we will put all node those already explored so that we don't explore it again
-    visited_list = [] 
-    
-    # Add the start node
-    yet_to_visit_list.append(start_node)
-    
-    # Adding a stop condition. This is to avoid any infinite loop and stop 
-    # execution after some reasonable number of steps
-    outer_iterations = 0
-    max_iterations = (len(maze) // 2) ** 10
+    # endNode를 찾을 때까지 실행
+    while openList:
 
-    # what squares do we search . serarch movement is left-right-top-bottom 
-    #(4 movements) from every positon
+        # 현재 노드 지정
+        currentNode = openList[0]
+        currentIdx = 0
 
-    move  =  [[-1, 0 ], # go up
-              [ 0, -1], # go left
-              [ 1, 0 ], # go down
-              [ 0, 1 ]] # go right
+        # 이미 같은 노드가 openList에 있고, f 값이 더 크면
+        # currentNode를 openList안에 있는 값으로 교체
+        for index, item in enumerate(openList):
+            if item.f < currentNode.f:
+                currentNode = item
+                currentIdx = index
 
+        # openList에서 제거하고 closedList에 추가
+        openList.pop(currentIdx)
+        closedList.append(currentNode)
 
-    """
-        1) We first get the current node by comparing all f cost and selecting the lowest cost node for further expansion
-        2) Check max iteration reached or not . Set a message and stop execution
-        3) Remove the selected node from yet_to_visit list and add this node to visited list
-        4) Perofmr Goal test and return the path else perform below steps
-        5) For selected node find out all children (use move to find children)
-            a) get the current postion for the selected node (this becomes parent node for the children)
-            b) check if a valid position exist (boundary will make few nodes invalid)
-            c) if any node is a wall then ignore that
-            d) add to valid children node list for the selected parent
-            
-            For all the children node
-                a) if child in visited list then ignore it and try next node
-                b) calculate child node g, h and f values
-                c) if child in yet_to_visit list then ignore it
-                d) else move the child to yet_to_visit list
-    """
-    #find maze has got how many rows and columns 
-    no_rows, no_columns = np.shape(maze)
-    
-    # Loop until you find the end
-    
-    while len(yet_to_visit_list) > 0:
-        
-        # Every time any node is referred from yet_to_visit list, counter of limit operation incremented
-        outer_iterations += 1    
+        # 현재 노드가 목적지면 current.position 추가하고
+        # current의 부모로 이동
+        if currentNode == endNode:
+            path = []
+            current = currentNode
+            while current is not None:
+                x, y = current.position
+                maze[x][y] = 7
+                path.append(current.position)
+                current = current.parent
+            return path[::-1]  # Return reversed path
 
-        
-        # Get the current node
-        current_node = yet_to_visit_list[0]
-        current_index = 0
-        for index, item in enumerate(yet_to_visit_list):
-            if item.f < current_node.f:
-                current_node = item
-                current_index = index
-                
-        # if we hit this point return the path such as it may be no solution or 
-        # computation cost is too high
-        if outer_iterations > max_iterations:
-            print ("giving up on pathfinding too many iterations")
-            return return_path(current_node,maze)
-
-        # Pop current node out off yet_to_visit list, add to visited list
-        yet_to_visit_list.pop(current_index)
-        visited_list.append(current_node)
-
-        # test if goal is reached or not, if yes then return the path
-        if current_node == end_node:
-            return return_path(current_node,maze)
-
-        # Generate children from all adjacent squares
         children = []
+        # 인접한 xy좌표 전부
+        for newPosition in [(0, -1), (0, 1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1)]:
 
-        for new_position in move: 
+            # 노드 위치 업데이트
+            nodePosition = (
+                currentNode.position[0] + newPosition[0],  # X
+                currentNode.position[1] + newPosition[1])  # Y
 
-            # Get node position
-            node_position = (current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])
+            # Range
+            rangeCriteria = [
+                nodePosition[0] > (len(maze) - 1),
+                nodePosition[0] < 0,
+                nodePosition[1] > (len(maze[len(maze) - 1]) - 1),
+                nodePosition[1] < 0,
+            ]
 
-            # Make sure within range (check if within maze boundary)
-            if (node_position[0] > (no_rows - 1) or 
-                node_position[0] < 0 or 
-                node_position[1] > (no_columns -1) or 
-                node_position[1] < 0):
+            if any(rangeCriteria):
                 continue
 
-            # Make sure walkable terrain
-            if maze[node_position[0]][node_position[1]] != 0:
+            # 장애물이 있으면 다른 위치 불러오기
+            if maze[nodePosition[0]][nodePosition[1]] != 0:
                 continue
 
-            # Create new node
-            new_node = Node(current_node, node_position)
+            newNode = Node(currentNode, nodePosition)
+            children.append(newNode)
 
-            # Append
-            children.append(new_node)
-
-        # Loop through children
+        # 자식들 모두 loop
         for child in children:
-            
-            # Child is on the visited list (search entire visited list)
-            if len([visited_child for visited_child in visited_list if visited_child == child]) > 0:
+            # 자식이 closedList에 있으면 check
+            if len([closedChild for closedChild in closedList if closedChild == child]) > 0:
                 continue
 
-            # Create the f, g, and h values
-            child.g = current_node.g + cost
-            ## Heuristic costs calculated here, this is using eucledian distance
-            child.h = (((child.position[0] - end_node.position[0]) ** 2) + 
-                       ((child.position[1] - end_node.position[1]) ** 2)) 
-
+            # f, g, h값 업데이트
+            child.g = currentNode.g + 1
+            child.h = ((child.position[0] - endNode.position[0]) ** 2) + \
+                      ((child.position[1] - endNode.position[1]) ** 2)
             child.f = child.g + child.h
 
-            # Child is already in the yet_to_visit list and g cost is already lower
-            if len([i for i in yet_to_visit_list if child == i and child.g > i.g]) > 0:
+            # 자식이 openList에 있으면 check
+            if len([openNode for openNode in openList
+                    if child == openNode and child.g > openNode.g]) > 0:
                 continue
 
-            # Add the child to the yet_to_visit list
-            yet_to_visit_list.append(child)
+            openList.append(child)
+
+
+def print_path(maze, path):
+    map = ''
+    for coord in path:
+        maze[coord[0]][coord[1]] = 'P'
+    for i in maze:
+        for j in i:
+            if j == 0:
+                map += " "
+            else:
+                map += str(j)
+        map += '\n'
+    return map
+
+
+def load_map(name):
+    with open('maps/{}.yaml'.format(name), 'r') as map_file:
+        map_file = yaml.load(map_file, Loader=yaml.FullLoader)
+
+    return map_file['tiles']
+
+
+x = load_map('udem1')
+
+
+def create_areas(mapdata):
+    data = []
+
+    for m in mapdata:
+        row = []
+        for t in m:
+            if t == 'floor' or t == 'asphalt' or t == 'grass':
+                for i in range(10):
+                    row.append(1)
+            else:
+                for i in range(10):
+                    row.append(0)
+
+        for i in range(10):
+            data.append(row)
+
+    return data
+
+
+star_map = create_areas(load_map('udem1'))
+
+
+def main(start, end):
+
+    star_map = create_areas(load_map('udem1'))
+
+    start_x = start[0]
+    start_y = start[1]
+
+    start = (start_y, start_x)
+
+    end_x = end[0]
+    end_y = end[1]
+
+    end = (end_y, end_x)
+
+    print(star_map[end_y][end_x])
+
+    #star_map[y_e][x_e] = 'X'
+    print(star_map[end_y])
+
+    path = aStar(star_map, start, end)
+    print(path)
+
+    return path
+
+
+
 
 
 def find_way(maze, start, end, cost):
-    path = search(maze,cost, start, end)
-    return path
+    #path = search(maze,cost, start, end)
+    return True

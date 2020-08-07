@@ -1,13 +1,14 @@
 import astar, yaml
 
 def load_map(name):
-    with open('../maps/{}.yaml'.format(name), 'r') as map_file:
+    with open('maps/{}.yaml'.format(name), 'r') as map_file:
         map_file = yaml.load(map_file, Loader=yaml.FullLoader)
     
     return map_file['tiles']
 
 x = load_map('udem1')
-print(x, '\n\n')
+
+
 def create_areas(mapdata):
     data = []
     
@@ -29,7 +30,6 @@ def create_areas(mapdata):
     
 star_map = create_areas(load_map('udem1'))
 
-
 maze = [
         
             [0, 1, 0, 0, 0, 0],
@@ -41,8 +41,8 @@ maze = [
             
             ]
     
-start = [15, 15] # starting position
-end = [15,30] # ending position
+start = [33, 33] # starting position
+end = [70,70] # ending position
 cost = 1 # cost per movement
 
 
