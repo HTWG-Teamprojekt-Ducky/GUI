@@ -87,6 +87,7 @@ display_y = 0
 actual_y = 0
 
 distance_traveled = 0
+number_of_clicks = 0
 
 text_y_display = tk.StringVar()
 tk.Button(root, textvariable=text_y_display).grid(row=0, column=1, sticky='W', padx=15, pady=15)
@@ -149,6 +150,35 @@ def keypress(event):
     canvas.move(ducky, x, y)
 
     print(canvas.coords(ducky))
+
+
+def callback(event):
+    """
+    This callback to generate two points on grid, green as starting point and blue as
+    endpoint for ducky.
+    """
+    # TODO: Give all the points between start and endpoint and map accordingly for A* with 0 and 1s
+    global number_of_clicks
+
+    number_of_clicks += 1
+
+    if number_of_clicks == 1:
+        canvas.delete("end")
+        canvas.delete("start")
+
+        canvas.create_rectangle(event.x, event.y, event.x + 6, event.y + 6, fill="green", tags="start")
+        print("clicked at", event.x, event.y)
+        # text_x_display.set('X-Koordinate_Display: ' + "str(display_x * 6) + event.x")
+        # text_x_actual.set('X-Koordinate_Actual: ' + "str(display_x / 20) + event.x")
+
+    elif number_of_clicks == 2:
+
+        canvas.delete("end")
+        canvas.create_rectangle(event.x, event.y, event.x + 6, event.y + 6, fill="blue", tags="end")
+        print("clicked at", event.x, event.y)
+        number_of_clicks = 0
+
+    print(number_of_clicks)
 
 
 def draw_grid_board(canvas):
@@ -257,12 +287,11 @@ def convert_to_ducky_four_coordinates(a, b):
 
 def place_coordinates(canvas):
     # take canvas as root
-    coords = [(0, 0), (0, 5), (0, 10), (0, 15), (0, 20), (0, 25), (0, 30), (0, 35), (0, 40), (0, 45), (0, 45)]
-    for c in coords:
-        label = canvas.create_rectangle(120, 120, 120 + 42, 120 + 72, fill="yellow")
+    label = canvas.create_rectangle(120, 120, 120 + 42, 120 + 72, fill="yellow")
 
 
 root.bind("<Key>", keypress)
+root.bind("<Button-1>", callback)
 
 gen_map('udem1')
 
