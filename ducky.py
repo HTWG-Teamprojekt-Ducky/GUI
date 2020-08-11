@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 import yaml
 from PIL import ImageTk, Image
-from modules import astar
+from modules import astar, navigation
 
 global canvas
 global ducky
@@ -19,6 +19,8 @@ array_of_local_coordinates = [(1.4, 1.4), (1.4, 1.5), (1.4, 1.6), (1.4, 1.7), (1
 elements = []
 scaled_coordinates_ = {}
 gui_final_coordinates_ = {}
+
+
 
 
 def calc_mapsize(imap):
@@ -52,7 +54,7 @@ def gen_map(name):
         pass
 
     canvas = tk.Canvas(width=dimension[0], height=dimension[1], bg='black')
-    canvas.grid(row=1, column=1)
+    canvas.grid(row=1, column=0, padx=15, pady=15)
 
     for row in range(len(imap['tiles'])):
         for column in range(len(imap['tiles'][0])):
@@ -90,24 +92,24 @@ distance_traveled = 0
 number_of_clicks = 0
 
 text_y_display = tk.StringVar()
-tk.Button(root, textvariable=text_y_display).grid(row=0, column=1, sticky='W', padx=15, pady=15)
-text_y_display.set('Y-Koordinate_Display: 0')
+tk.Button(root, textvariable=text_y_display, width=12).grid(row=0, column=1, sticky='W', padx=15, pady=15)
+text_y_display.set('Display-X: 0')
 
 text_x_display = tk.StringVar()
-tk.Button(root, textvariable=text_x_display).grid(row=0, column=1, sticky='W', padx=185, pady=15)
-text_x_display.set('X-Koordinate_Display: 0')
-
-text_y_actual = tk.StringVar()
-tk.Button(root, textvariable=text_y_actual).grid(row=0, column=1, sticky='W', padx=385, pady=15)
-text_y_actual.set('Y-Koordinate_Actual: 0')
+tk.Button(root, textvariable=text_x_display, width=12).grid(row=0, column=1, sticky='W', padx=165, pady=15)
+text_x_display.set('Display-Y: 0')
 
 text_x_actual = tk.StringVar()
-tk.Button(root, textvariable=text_x_actual).grid(row=0, column=1, sticky='W', padx=570, pady=15)
-text_x_actual.set('X-Koordinate_Actual: 0')
+tk.Button(root, textvariable=text_x_actual, width=12).grid(row=0, column=1, sticky='W', padx=315, pady=15)
+text_x_actual.set('Actual-X: 0')
+
+text_y_actual = tk.StringVar()
+tk.Button(root, textvariable=text_y_actual, width=12).grid(row=0, column=1, sticky='W', padx=465, pady=15)
+text_y_actual.set('Actual-Y: 0')
 
 distance_traveled_display = tk.StringVar()
-tk.Button(root, textvariable=distance_traveled_display).grid(row=0, column=1, sticky='W', padx=755, pady=15)
-distance_traveled_display.set('Distance - travelled: 0' + 'cm')
+tk.Button(root, textvariable=distance_traveled_display, width=12).grid(row=0, column=1, sticky='W', padx=615, pady=15)
+distance_traveled_display.set('Distance: 0cm')
 
 
 def keypress(event):
@@ -123,29 +125,29 @@ def keypress(event):
     if event.char == "a":
         x = -6
         display_x = display_x - 1
-        text_x_display.set('X-Koordinate_Display: ' + str(display_x * 6))
-        text_x_actual.set('X-Koordinate_Actual: ' + str(display_x / 20))
+        text_x_display.set('Display-X: ' + str(display_x * 6))
+        text_x_actual.set('Actual-X: ' + str(display_x / 2))
 
     elif event.char == "d":
         x = 6
         display_x = display_x + 1
-        text_x_display.set('X-Koordinate_Display: ' + str(display_x * 6))
-        text_x_actual.set('X-Koordinate_Actual: ' + str(display_x / 20))
+        text_x_display.set('Display-X: ' + str(display_x * 6))
+        text_x_actual.set('Actual-X: ' + str(display_x / 2))
 
     elif event.char == "w":
         y = -6
         display_y = display_y - 1
-        text_y_display.set('Y-Koordinate_Display: ' + str(display_y * 6))
-        text_y_actual.set('Y-Koordinate_Actual: ' + str(display_y / 20))
+        text_y_display.set('Display-Y: ' + str(display_y * 6))
+        text_y_actual.set('Actual-Y: ' + str(display_y / 2))
 
     elif event.char == "s":
         y = 6
         display_y = display_y + 1
-        text_y_display.set('Y-Koordinate_Display: ' + str(display_y * 6))
-        text_y_actual.set('Y-Koordinate_Actual: ' + str(display_y / 20))
+        text_y_display.set('Display-Y: ' + str(display_y * 6))
+        text_y_actual.set('Actual-Y: ' + str(display_y / 2))
 
     distance_traveled = int(distance_traveled + 2.8)
-    distance_traveled_display.set('Distance - travelled: ' + str(distance_traveled) + 'cm')
+    distance_traveled_display.set('Distance: ' + str(distance_traveled) + 'cm')
 
     canvas.move(ducky, x, y)
 
@@ -181,6 +183,8 @@ def callback(event):
     print(number_of_clicks)
 
 
+
+    print(number_of_clicks)
 def draw_grid_board(canvas):
     # draw grid on grid
     x1 = 0
@@ -290,8 +294,6 @@ def place_coordinates(canvas):
     label = canvas.create_rectangle(120, 120, 120 + 42, 120 + 72, fill="yellow")
 
 
-root.bind("<Key>", keypress)
-root.bind("<Button-1>", callback)
 
 gen_map('udem1')
 
@@ -299,6 +301,104 @@ START = [35, 15]
 END = [40, 55]
 
 line = astar.main(START, END)
+root.bind("<Key>", keypress)
+
+"""
+    Setting waypoints through mouse-clicks
+    Functions: set_start, set_end
+"""
+
+start_set = False; end_set = False
+start = []; end = []; ovals = []
+
+start_point = tk.StringVar()
+tk.Button(root, textvariable=start_point, bg='green', fg='white', width=12).grid(row=1, column=1, sticky='NW', padx=15, pady=0)
+start_point.set('Start')
+
+end_point = tk.StringVar()
+tk.Button(root, textvariable=end_point, bg='blue', fg='white', width=12).grid(row=1, column=1, sticky='NW', padx=165, pady=0)
+end_point.set('End')
+
+def set_start(event):
+    global start_set; global start_point; global start
+
+    if start_set:
+        canvas.delete('start')
+
+    canvas.create_rectangle(event.x, event.y, event.x + 6, event.y + 6, fill="green", tags="start")
+    start_set = True
+    x = int(round(event.x/12)); y = int(round(event.y/12))
+    start.append(x); start.append(y)
+
+    start_point.set('{}, {}'.format(x, y))
+
+def set_end(event):
+    global end_set; global end_point; global end
+
+    if end_set:
+        canvas.delete('end')
+
+    canvas.create_rectangle(event.x, event.y, event.x + 6, event.y + 6, fill="blue", tags="end")
+    end_set = True
+    x = int(round(event.x/12)); y = int(round(event.y/12))
+    end.append(x); end.append(y)
+
+    end_point.set('{}, {}'.format(x, y))
+
+
+def find_path():
+
+    if len(ovals) > 0:
+        for o in ovals:
+            canvas.delete(o)
+
+    global start; global end;
+    print('INIT', start, end)
+    line = astar.main(start, end)
+
+    for i,l in enumerate(line):
+        x = (4 + 4 + 4) * l[1]  # 4 = 0,
+        y = (4 + 4 + 4) * l[0]
+
+        x1, y1 = (x - 3), (y - 3)
+        x2, y2 = (x + 3), (y + 3)
+
+        oval = canvas.create_oval(x1, y1, x2, y2, fill="#00ffff", tags='oval' + str(i))
+        ovals.append('oval' + str(i))
+
+    start = []; end = []
+
+root.bind("<Button-2>", set_start)
+root.bind("<Button-3>", set_end)
+
+def enable_grid():
+        global canvas
+        # draw grid on grid
+        x1 = 0
+        x2 = 1000
+        # draw horizontal lines
+        for k in range(0, 1000, 6):
+            y1 = k
+            y2 = k
+            canvas.create_line(x1, y1, x2, y2, fill="#888888")
+        # draw vertical lines
+        y1 = 0
+        y2 = 1000
+        for k in range(0, 1000, 6):
+            x1 = k
+            x2 = k
+            canvas.create_line(x1, y1, x2, y2, fill="#888888")
+
+tk.Button(root, text='A*', width=12, command=find_path, bg='pink').grid(row=1, column=1, sticky='NW', padx=315, pady=0)
+tk.Checkbutton(root, text='Enable grid', command=enable_grid).grid(row=1, column=1, sticky='NW', padx=465, pady=0)
+"""
+    Calculating realistic coordinates based on yaml-Coordinates
+    Functions: exchange_coords
+"""
+
+
+
+print(line)
 
 
 def draw_dots(canvas):
@@ -313,10 +413,10 @@ def draw_dots(canvas):
         canvas.create_oval(x1, y1, x2, y2, fill="#00ffff")
 
 
-draw_dots(canvas)
+navigation = navigation.Navigation(canvas)
 
 place_coordinates(canvas)
-draw_grid_board(canvas)
+#draw_grid_board(canvas)
 global_to_scaled_coordinates(array_of_local_coordinates)
 scaled_to_gui_coordinates()
 
