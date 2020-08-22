@@ -1,5 +1,4 @@
 import yaml
-from timeit import repeat
 
 class Node:
     def __init__(self, parent=None, position=None):
@@ -12,7 +11,6 @@ class Node:
 
     def __eq__(self, other):
         return self.position == other.position
-
 
 def aStar(maze, start, end):
     # startNode와 endNode 초기화
@@ -104,7 +102,6 @@ def aStar(maze, start, end):
 
             openList.append(child)
 
-
 def print_path(maze, path):
     map = ''
     for coord in path:
@@ -118,16 +115,13 @@ def print_path(maze, path):
         map += '\n'
     return map
 
-
 def load_map(name):
     with open('maps/{}.yaml'.format(name), 'r') as map_file:
         map_file = yaml.load(map_file, Loader=yaml.FullLoader)
 
     return map_file['tiles']
 
-
 x = load_map('udem1')
-
 
 def create_areas(mapdata):
     data = []
