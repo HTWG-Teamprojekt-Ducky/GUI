@@ -1,7 +1,8 @@
 import yaml
 from PIL import ImageTk, Image
 
-class Mapping():
+
+class Mapping:
     one = []
 
     def __init__(self, tk):
@@ -35,7 +36,7 @@ class Mapping():
         x = 0
         y = 0
 
-        ducky = canvas.create_rectangle(x, y, x + 5, y + 5, fill="red")  # calculated size of ducky
+        ducky = canvas.create_rectangle(x, y, x + 21, y + 36, fill="red", tags='ducky')
         return [canvas, ducky]
 
     def get_image(self, name):
@@ -51,10 +52,10 @@ class Mapping():
         width = len(imap['tiles'][0]) * 120
 
         return [width, height]
-
-    def load_map():
-        root.filename = filedialog.askopenfilename(initialdir="maps/", title="Select map",
-                                                   filetypes=(("yaml files", "*.yaml"), ("all files", "*.*")))
-        map_file = root.filename.split('/')[-1][:-5]
-
-        gen_map(map_file)
+    #
+    # def load_map():
+    #     root.filename = filedialog.askopenfilename(initialdir="maps/", title="Select map",
+    #                                                filetypes=(("yaml files", "*.yaml"), ("all files", "*.*")))
+    #     map_file = root.filename.split('/')[-1][:-5]
+    #
+    #     gen_map(map_file)
