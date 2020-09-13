@@ -1,3 +1,7 @@
+# The following class defines GUI.
+# TODO: ADD Description and complete document comments
+
+
 import threading
 import tkinter as tk
 import numpy as np
@@ -52,6 +56,12 @@ class GUI(threading.Thread):
 
     def set_gui_label_buttons(self):
 
+        """
+
+        :return:
+
+        """
+
         tk.Button(self.root, textvariable=self.text_y_display, width=12).grid(row=0, column=1, sticky='W', padx=15,
                                                                               pady=15)
         self.text_y_display.set('Display-X: 0')
@@ -80,6 +90,14 @@ class GUI(threading.Thread):
         self.display_speed.set('Speed:' + '0' + 'cm/s')
 
     def keypress(self, event):
+
+        """
+
+        :param event:
+        :return:
+
+        """
+
         x = 0
         y = 0
 
@@ -118,6 +136,13 @@ class GUI(threading.Thread):
 
     def set_start(self, event):
 
+        """
+
+        :param event:
+        :return:
+
+        """
+
         if self.start_set:
             self.canvas.delete('start')
 
@@ -131,6 +156,14 @@ class GUI(threading.Thread):
         self.start_point.set('{}, {}'.format(x, y))
 
     def set_end(self, event):
+
+        """
+
+        :param event:
+        :return:
+
+        """
+
         if self.end_set:
             self.canvas.delete('end')
 
@@ -145,11 +178,27 @@ class GUI(threading.Thread):
 
     def draw_ducky_bot(self, ducky_pos, old_ducky_pos):
 
+        """
+
+        :param ducky_pos:
+        :param old_ducky_pos:
+        :return:
+
+        """
+
         angle = np.arctan2(ducky_pos[1] - old_ducky_pos[1], ducky_pos[0] - old_ducky_pos[0])
         points = self.calc_points(ducky_pos, angle - np.pi / 2)
         self.ducky = self.canvas.create_polygon(points, fill="red", tags='ducky')
 
     def move_ducky(self, line):
+
+        """
+
+        :param line:
+        :return:
+
+        """
+
         old_x = 0
         old_y = 0
         for coordinates in line:
@@ -160,10 +209,10 @@ class GUI(threading.Thread):
             scaled_y = y * 12
             self.draw_ducky_bot([scaled_x, scaled_y], (old_x, old_y))
 
-            ducky_speed = (5.6/self.sleep_time)
+            ducky_speed = (5.6 / self.sleep_time)
 
             # print the coordinates of middle point of the ducky
-            print("scaled_x = ", scaled_x, " scaled_y = ", scaled_y)
+            # print("scaled_x = ", scaled_x, " scaled_y = ", scaled_y)
             self.text_x_display.set('Display-X: ' + str(scaled_x))
             self.text_x_actual.set('Actual-X: ' + str(scaled_x / 12))
             self.text_y_display.set('Display-Y: ' + str(scaled_y))
@@ -178,11 +227,18 @@ class GUI(threading.Thread):
             time.sleep(self.sleep_time)
 
     def find_path(self):
+
+        """
+
+        :return:
+
+        """
+
         if len(self.ovals) > 0:
             for o in self.ovals:
                 self.canvas.delete(o)
 
-        print('INIT', self.start, self.end)
+        # print('INIT', self.start, self.end)
         line = astar.main(self.start, self.end)
 
         for i, l in enumerate(line):
@@ -201,6 +257,13 @@ class GUI(threading.Thread):
         self.end = []
 
     def draw_buttons(self):
+
+        """
+
+        :return:
+
+        """
+
         tk.Button(self.root, textvariable=self.start_point, bg='green', fg='white', width=12).grid(row=1, column=1,
                                                                                                    sticky='NW',
                                                                                                    padx=15,
@@ -224,6 +287,14 @@ class GUI(threading.Thread):
 
     @staticmethod
     def calc_points(pos, angle):
+
+        """
+        :param pos:
+        :param angle:
+        :return:
+
+        """
+
         offx = 21 / 2
         offy = 36 / 2
 
