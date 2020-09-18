@@ -10,7 +10,7 @@ tiles:
 - [floor    , curve_left/W  , straight/W, 3way_left/W   , straight/W, straight/W    , curve_left/N  , asphalt]
 - [floor    , straight/S    , grass     , straight/N    , asphalt   , asphalt       , straight/N    , asphalt]
 - [floor    , 3way_left/S   , straight/W, 3way_left/N   , asphalt   , asphalt       , straight/N    , asphalt]
-- [floor    , straight/S    , grass     , straight/N    , asphalt   , curve_right/N , curve_left/E  , asphalt]
+- [floor    , straight/S    , grass     , straight/N    , asphalt   , curve_left/W , curve_left/E  , asphalt]
 - [floor    , curve_left/S  , straight/E, 3way_left/E   , straight/E, curve_left/E  , asphalt       , asphalt]
 - [floor    , floor         , floor     , floor         , floor     , floor         , floor         , floor]
 
@@ -96,5 +96,5 @@ objects:
   height: 0.2
   optional: true
 
-tile_size: 0.585
+tile_size: 1
 

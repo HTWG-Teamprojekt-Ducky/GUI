@@ -5,10 +5,14 @@
 import threading
 import tkinter as tk
 import numpy as np
+from gym_duckietown.envs import DuckietownEnv
+from multiprocessing import Process
 from modules import astar, navigation, grid, mapping, findpath
 import time
 from threading import Thread
 
+
+# from exercises import basic_control
 
 class GUI(threading.Thread):
 
@@ -34,6 +38,7 @@ class GUI(threading.Thread):
         self.end_point = tk.StringVar()
         self.display_speed = tk.StringVar()
 
+        self.myduckietown = DuckietownEnv(map_name="udem1", domain_rand=False, draw_bbox=False)
         self.START = [0, 0]
         self.END = [0, 0]
         self.start = []
@@ -201,9 +206,11 @@ class GUI(threading.Thread):
 
         old_x = 0
         old_y = 0
+
         for coordinates in line:
             # delete the ducky from _init_ and also after changing position
             self.canvas.delete("ducky")
+
             y, x = coordinates
             scaled_x = x * 12
             scaled_y = y * 12
@@ -224,7 +231,9 @@ class GUI(threading.Thread):
 
             old_x = scaled_x
             old_y = scaled_y
+
             time.sleep(self.sleep_time)
+
 
     def find_path(self):
 
@@ -233,7 +242,7 @@ class GUI(threading.Thread):
         :return:
 
         """
-
+        print("so vile threads laufen",threading.active_count())
         if len(self.ovals) > 0:
             for o in self.ovals:
                 self.canvas.delete(o)
@@ -253,8 +262,33 @@ class GUI(threading.Thread):
         t = Thread(target=self.move_ducky, args=(line,))
         t.start()
 
+
+        #self.move_ducky(line)
+        #t = Process(target=self.startGUI, args=(line,))
+        #t.start()
+        self.myduckietown.reset()
+        self.myduckietown.render()
+
+        self.myduckietown.start(line)
+        #self.root.mainloop()
+        #t = Process(target=self.move_ducky, args=(line,))
+        #t.join()
+        #x = Thread(target=self.myduckietown.start, args=(line,))
+        #x.start()
+
+        print("wie viele threads laufen?", threading.active_count())
+
+
+        # x = Thread(target=self.myduckietown.start, args=(line,))
+        # x.start()
         self.start = []
         self.end = []
+        # self.myduckietown.start(line)
+
+    def startGUI(self, line):
+        self.myduckietown.reset()
+        self.myduckietown.render()
+        self.myduckietown.start(line)
 
     def draw_buttons(self):
 
