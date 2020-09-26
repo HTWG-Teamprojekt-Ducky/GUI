@@ -1,14 +1,13 @@
 # The following class defines GUI.
 # TODO: ADD Description and complete document comments
-
-
+import asyncio
 import threading
 import tkinter as tk
 import numpy as np
 from gym_duckietown.envs import DuckietownEnv
 from multiprocessing import Process
 from modules import astar, navigation, grid, mapping, findpath
-import time
+import time, subprocess
 from threading import Thread
 
 
@@ -58,6 +57,14 @@ class GUI(threading.Thread):
         self.coordinate_elements = {'display_x': 0, 'display_y': 0,
                                     'actual_x': 0, 'actual_y': 0,
                                     'distance_traveled': 0, 'number_clicks': 0}
+
+    def draw_particles(self, parti):
+        for x in range(0, len(parti)):
+            self.canvas.delete('parti' + str(x))
+
+        for x in range(0, len(parti)):
+            self.canvas.create_oval(parti[x][0], parti[x][1], parti[x][0] + 6, parti[x][1] + 6, fill="#00ffff", tags='parti' + str(x))
+
 
     def set_gui_label_buttons(self):
 
@@ -218,6 +225,12 @@ class GUI(threading.Thread):
 
             ducky_speed = (5.6 / self.sleep_time)
 
+            parti = []
+            for i in range(-25, 25):
+                parti.append((scaled_x + i, scaled_y + i))
+
+            self.draw_particles(parti)
+
             # print the coordinates of middle point of the ducky
             # print("scaled_x = ", scaled_x, " scaled_y = ", scaled_y)
             self.text_x_display.set('Display-X: ' + str(scaled_x))
@@ -248,28 +261,28 @@ class GUI(threading.Thread):
                 self.canvas.delete(o)
 
         # print('INIT', self.start, self.end)
+        line = []
         line = astar.main(self.start, self.end)
+        if len(line) > 0:
+           for i, l in enumerate(line):
+                x = (4 + 4 + 4) * l[1]  # 4 = 0,
+                y = (4 + 4 + 4) * l[0]
 
-        for i, l in enumerate(line):
-            x = (4 + 4 + 4) * l[1]  # 4 = 0,
-            y = (4 + 4 + 4) * l[0]
-
-            x1, y1 = (x - 3), (y - 3)
-            x2, y2 = (x + 3), (y + 3)
-            self.canvas.create_oval(x1, y1, x2, y2, fill="#00ffff", tags='oval' + str(i))
-            self.ovals.append('oval' + str(i))
+                x1, y1 = (x - 3), (y - 3)
+                x2, y2 = (x + 3), (y + 3)
+                self.canvas.create_oval(x1, y1, x2, y2, fill="#00ffff", tags='oval' + str(i))
+                self.ovals.append('oval' + str(i))
 
         t = Thread(target=self.move_ducky, args=(line,))
         t.start()
 
-
+        #subprocess.call(['python3', 'sim.py'])
         #self.move_ducky(line)
         #t = Process(target=self.startGUI, args=(line,))
         #t.start()
-        self.myduckietown.reset()
-        self.myduckietown.render()
-
-        self.myduckietown.start(line)
+        #self.myduckietown.reset()
+        #self.myduckietown.render()
+        # self.myduckietown.start(line)
         #self.root.mainloop()
         #t = Process(target=self.move_ducky, args=(line,))
         #t.join()
@@ -359,4 +372,5 @@ class GUI(threading.Thread):
 
 
 if __name__ == "__main__":
-    GUI().main()
+    t = Thread(target=GUI().main(), args=())
+    t.start()

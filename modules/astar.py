@@ -1,14 +1,14 @@
 import numpy
 import yaml
 
-way_left_N = [['X', 'X', 'X', 'X', 'X', 'X', 'N', 'N', 'N', 'X'],
-                ['N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'X'],
-                ['N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'X'],
-                ['N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'X'],
-                ['X', 'X', 'X', 'X', 'X', 'X', 'N', 'N', 'N', 'X'],
-                ['X', 'X', 'X', 'X', 'X', 'X', 'N', 'N', 'N', 'X'],
-                ['S', 'S', 'S', 'S', 'X', 'X', 'N', 'N', 'N', 'X'],
-                ['S', 'S', 'S', 'S', 'X', 'X', 'N', 'N', 'N', 'X'],
+way_left_N = [['X', 'S', 'S', 'S', 'X', 'X', 'N', 'N', 'N', 'X'],
+                ['N', 'S', 'S', 'S', 'X', 'X', 'N', 'N', 'N', 'X'],
+                ['N', 'S', 'S', 'S', 'X', 'X', 'N', 'N', 'N', 'X'],
+                ['N', 'S', 'S', 'S', 'N', 'N', 'N', 'N', 'N', 'X'],
+                ['X', 'S', 'S', 'S', 'N', 'N', 'N', 'N', 'N', 'X'],
+                ['X', 'S', 'S', 'S', 'X', 'X', 'N', 'N', 'N', 'X'],
+                ['S', 'S', 'S', 'S', 'N', 'N', 'N', 'N', 'N', 'X'],
+                ['S', 'S', 'S', 'S', 'N', 'N', 'N', 'N', 'N', 'X'],
                 ['S', 'S', 'S', 'S', 'X', 'X', 'N', 'N', 'N', 'X'],
                 ['X', 'S', 'S', 'S', 'X', 'X', 'N', 'N', 'N', 'X']]
 
@@ -146,6 +146,7 @@ class Node:
     def __eq__(self, other):
         return self.position == other.position
 
+
 class Vertex:
     def __init__(self, position=None):
         self.position = position
@@ -160,48 +161,47 @@ class Vertex:
 def shortest(maze, start, end):
     kl = []
     d = []
-    p =[]
-    anzahlV = (len(maze)) * (len(maze[0]))
-    print("anzahl an v", anzahlV)
-    for x in range(0, anzahlV):
+    p = []
+    number_of_vertices = (len(maze)) * (len(maze[0]))
+    print("number_of_vertices", number_of_vertices)
+    for x in range(0, number_of_vertices):
         d.append(200000)
         p.append(None)
     d[start.getIndex()] = 0
     kl.append(start)
     print("start::", kl[0])
 
-    while(len(kl) > 0):
-        v = findMinH(kl, end, d)
+    while len(kl) > 0:
+        v = find_min_h(kl, end, d)
         kl.remove(v)
-        print("mein nächstes v", v.position)
-        #print("anzahl von kl:", len(kl))
-        if(v.getIndex() == end.getIndex()):
+        print("next vertex", v.position)
+        if v.getIndex() == end.getIndex():
             print("find way")
             return p
-        for x in getAdjazetVerticies(v, (len(maze) - 1), (len(maze[len(maze) - 1]) - 1), maze):
-            if(d[x.getIndex()] == 200000):
+        for x in get_adjacent_vertices(v, (len(maze) - 1), (len(maze[len(maze) - 1]) - 1), maze):
+            if d[x.getIndex()] == 200000:
                 kl.append(x)
-            cost = d[v.getIndex()] + 1 #maze[x.position[0]][x.position[1]]
-    #        print("cost for", x.position[1], x.position[0], " = ", cost)
-  #          print("maze:", maze[x.position[0]][x.position[1]])
-            if(cost < d[x.getIndex()]):
+            cost = d[v.getIndex()] + 1  # maze[x.position[0]][x.position[1]]
+            if cost < d[x.getIndex()]:
                 p[x.getIndex()] = v
                 d[x.getIndex()] = cost
     print("no way")
     return p
 
-def findMinH(kl, end, d):
+
+def find_min_h(kl, end, d):
     low = 20000000
     v = None
     for x in kl:
         h = numpy.sqrt(((x.position[0] - end.position[0]) ** 2) + ((x.position[1] - end.position[1]) ** 2))
-        if( low > d[x.getIndex()] + h):
+        if low > d[x.getIndex()] + h:
             low = d[x.getIndex()] + h
             v = x
     return v
 
-def getAdjazetVerticies(current_node, maxX, maxY, maze):
-    listo = []
+
+def get_adjacent_vertices(current_node, max_x, max_y, maze):
+    list_of_vertices = []
 
     #
     #
@@ -213,174 +213,55 @@ def getAdjazetVerticies(current_node, maxX, maxY, maze):
     #      /   |  \
     #   S.W    S   S.E
 
-    #for newPosition in [(0, -1), (0, 1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1)]:
-    adjactVerticies = []
+    # for newPosition in [(0, -1), (0, 1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1)]:
+    adjacent_vertices = []
     # (y,x)
     print('maze value at y = ', current_node.position[0], 'x =', current_node.position[1], 'value =' , maze[current_node.position[0]][current_node.position[1]])
     if maze[current_node.position[0]][current_node.position[1]] == 'S':
-        adjactVerticies = [(0, -1), (1, 0), (0, 1), (1, -1), (1, 1)]
+        adjacent_vertices = [(0, -1), (1, 0), (0, 1), (1, -1), (1, 1)]
     elif maze[current_node.position[0]][current_node.position[1]] == 'N':
-        adjactVerticies = [(0, 1), (-1, 0), (0, -1), (-1, 1), (-1, -1)]
+        adjacent_vertices = [(0, 1), (-1, 0), (0, -1), (-1, 1), (-1, -1)]
     elif maze[current_node.position[0]][current_node.position[1]] == 'E':
-        adjactVerticies = [(0, 1), (1, 0), (-1, 0), (1, 1), (-1, 1)]
+        adjacent_vertices = [(0, 1), (1, 0), (-1, 0), (1, 1), (-1, 1)]
     elif maze[current_node.position[0]][current_node.position[1]] == 'W':
-        adjactVerticies = [(0, -1), (-1, 0), (1, 0), (-1, -1), (1, -1)]
+        adjacent_vertices = [(0, -1), (-1, 0), (1, 0), (-1, -1), (1, -1)]
 
-    for newPosition in adjactVerticies:
-    #for newPosition in [(0, -1), (0, 1), (-1, 0), (1, 0)]:
+    for newPosition in adjacent_vertices:
+        # for newPosition in [(0, -1), (0, 1), (-1, 0), (1, 0)]:
         node_position = (
             current_node.position[0] + newPosition[0],  # X
             current_node.position[1] + newPosition[1])  # Y
         v = Vertex(node_position)
         # Range
         range_criteria = [
-            node_position[0] > maxX,
+            node_position[0] > max_x,
             node_position[0] < 0,
-            node_position[1] > maxY,
+            node_position[1] > max_y,
             node_position[1] < 0,
         ]
 
         if any(range_criteria):
             continue
 
-        #if maze[node_position[0]][node_position[1]] > 30:
+        # if maze[node_position[0]][node_position[1]] > 30:
         #    continue
-        listo.append(v)
-    return listo
+        list_of_vertices.append(v)
+    return list_of_vertices
 
-def createpath(listo, start, end):
+
+def create_path(list_of_vertices, start, end):
     path = []
     previous = end
-    print("anzahl an elementen in p", len(listo))
-    if listo[end.getIndex()] is None:
+    print("number of element in p", len(list_of_vertices))
+    if list_of_vertices[end.getIndex()] is None:
         return []
-    while(start.getIndex() != previous.getIndex()):
+    while start.getIndex() != previous.getIndex():
         path.append(previous.position)
-        previous = listo[previous.getIndex()]
+        previous = list_of_vertices[previous.getIndex()]
     path.append(start.position)
     path.reverse()
 
     return path
-
-def a_star(maze, start, end):
-    """
-
-    :param maze:
-    :param start:
-    :param end:
-    :return:
-
-    """
-    print("length of maze", len(maze) * len(maze[0]))
-    # startNode endNode
-    start_node = Node(None, start)
-    start_node.g = start_node.h = start_node.f = 0
-    end_node = Node(None, end)
-    end_node.g = end_node.h = end_node.f = 0
-
-    # openList, ClosedList
-    open_list = []
-    closed_list = []
-
-    # openList
-    open_list.append(start_node)
-
-    # endNode
-    while open_list:
-
-        current_node = open_list[0]
-        current_idx = 0
-
-        # openList
-        # currentNode openList
-        for index, item in enumerate(open_list):
-            if item.f < current_node.f:
-                current_node = item
-                current_idx = index
-
-        # openList closedList
-        open_list.pop(current_idx)
-        closed_list.append(current_node)
-
-        # current.position
-        if current_node == end_node:
-            path = []
-            current = current_node
-            while current is not None:
-                x, y = current.position
-                #maze[x][y] = 7
-                path.append(current.position)
-                current = current.parent
-            return path[::-1]  # Return reversed path
-
-        children = []
-
-        #
-        #
-        #   N.W   N   N.E
-        #     \   |   /
-        #      \  |  /
-        #    W----Cell----E
-        #        / | \
-        #      /   |  \
-        #   S.W    S   S.E
-
-        for newPosition in [(0, -1), (0, 1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1)]:
-
-            node_position = (
-                current_node.position[0] + newPosition[0],  # X
-                current_node.position[1] + newPosition[1])  # Y
-
-            # Range
-            range_criteria = [
-                node_position[0] > (len(maze) - 1),
-                node_position[0] < 0,
-                node_position[1] > (len(maze[len(maze) - 1]) - 1),
-                node_position[1] < 0,
-            ]
-
-            if any(range_criteria):
-                continue
-
-            if maze[node_position[0]][node_position[1]] > 30:
-                continue
-
-            new_node = Node(current_node, node_position)
-            children.append(new_node)
-
-        # loop
-        for child in children:
-            # closed List check
-            if len([closedChild for closedChild in closed_list if closedChild == child]) > 0:
-                continue
-
-            # f, g, h
-           # print(maze[child.position[0]][child.position[1]])
-            child.g = current_node.g + maze[child.position[0]][child.position[1]]
-            child.h = ((child.position[0] - end_node.position[0]) ** 2) + \
-                      ((child.position[1] - end_node.position[1]) ** 2)
-            child.f = child.g + child.h
-
-            # open List check
-            if len([openNode for openNode in open_list
-                    if child == openNode and child.g > openNode.g]) > 0:
-                continue
-
-            open_list.append(child)
-
-
-def print_path(maze, path):
-    map = ''
-    for coord in path:
-        maze[coord[0]][coord[1]] = 'P'
-    for i in maze:
-        for j in i:
-            if j < 5:
-                map += " "
-            else:
-                map += str(j)
-        map += '\n'
-    return map
 
 
 def load_map(name):
@@ -466,11 +347,7 @@ def main(start, end):
 
     end = (end_y, end_x)
 
-    # print(star_map[end_y][end_x])
-    # star_map[y_e][x_e] = 'X'
-    # print(star_map[end_y])
-    print('activ astar')
-    #path = a_star(star_map, start, end)
+    print('a star active')
     print(star_map, start, end)
 
     v = shortest(star_map, Vertex(start), Vertex(end))
@@ -478,17 +355,10 @@ def main(start, end):
     s = Vertex(start)
     e = Vertex(end)
     if len(v) > 0:
-        p = createpath(v, s, e)
-        print("mien a stern")
+        p = create_path(v, s, e)
         for x in p:
             print(x)
-        print("lenght of mine path", len(p))
-   # print("length of other", len(path))
-   # print("path:", path)
+        print("length of my path", len(p))
         return p
     return []
 
-
-def find_way(maze, start, end, cost):
-    # path = search(maze,cost, start, end)
-    return True
