@@ -1,11 +1,13 @@
 # coding=utf-8
-import numpy as np
-from threading import Thread
 import threading
+
+import numpy as np
 from gym import spaces
 
-from ..simulator import Simulator
+from lokalisierung.Ducky_map import DuckieMap
+from lokalisierung.MCL import MCL
 from .. import logger
+from ..simulator import Simulator
 
 
 class DuckietownEnv(Simulator, threading.Thread):
@@ -85,12 +87,17 @@ class DuckietownEnv(Simulator, threading.Thread):
         tile_size = 1
         return rad - (tile_size / 20 - dist) * w
 
-    def start(self, line):
+    def startControl(self, line):
         print("asd", line[0][1], line[0][0])
         io = 0
         self.cur_pos = [line[0][1]/10, 0, line[0][0]/10]
         self.cur_angle = np.pi / 2
 
+        my_map = DuckieMap("../../maps/udem1.yaml")
+        particle_number = 1000
+        mcl = MCL(particle_number, my_map, self)
+        mcl.spawn_particle_list(self.cur_pos, self.cur_angle)
+        step_counter = 0
         while True:
             lane_pose = self.get_lane_pos2(self.cur_pos, self.cur_angle)
             print("self.cur_pose =")
@@ -107,8 +114,20 @@ class DuckietownEnv(Simulator, threading.Thread):
                 if (io >= len(line)):
                     io = 0
                     return
+            steering = self.global_angle_arr(line, io)
+            obs, reward, done, info = self.step([speed, steering])
+            mcl.integrate_movement([speed, steering])
+            step_counter += 1
+            mcl.integrate_measurement(distance_to_road_center, angle_from_straight_in_rads)
+            if step_counter % 2 == 0:
+                #start = time.time()
+                arr_chosenones, possible_location, possible_angle = mcl.resampling()
+                #end = time.time()
+                #duration = end - start
+                print("posloc and robot position", possible_location, self.cur_pos)
+                print('possible angle and robot angle', possible_angle, self.cur_angle)
+                mcl.weight_reset()
 
-            obs, reward, done, info = self.step([speed, self.global_angle_arr(line, io)])
             # obs, reward, done, info = self.step([speed, loca_angle(angle_from_straight_in_rads, distance_to_road_center)])
             # obs, reward, done, info = self.step([speed, 0])
             # total_reward += reward
@@ -120,7 +139,6 @@ class DuckietownEnv(Simulator, threading.Thread):
             if done:
                 if reward < 0:
                     print('*** CRASHED ***')
-                print('Final Reward = %.3f' % total_reward)
                 break
 
 
