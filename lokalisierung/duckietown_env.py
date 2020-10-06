@@ -8,37 +8,45 @@ from lokalisierung.Ducky_map import DuckieMap
 from lokalisierung.MCL import MCL
 from .. import logger
 from ..simulator import Simulator
+from Observer import Publisher
 
 
-class DuckietownEnv(Simulator, threading.Thread):
+class DuckietownEnv(Simulator, threading.Thread, Publisher):
     """
     Wrapper to control the simulator using velocity and steering angle
     instead of differential drive motor velocities
     """
 
     def __init__(
-        self,
-        gain = 1.0,
-        trim = 0.0,
-        radius = 0.0318,
-        k = 27.0,
-        limit = 1.0,
-        **kwargs
+            self,
+            gain=1.0,
+            trim=0.0,
+            radius=0.0318,
+            k=27.0,
+            limit=1.0,
+            line=None,
+            GUI=None,
+            **kwargs
     ):
+        Publisher.__init__(self)
         Simulator.__init__(self, **kwargs)
         logger.info('using DuckietownEnv')
         threading.Thread.__init__(self)
         self.action_space = spaces.Box(
-            low=np.array([-1,-1]),
-            high=np.array([1,1]),
+            low=np.array([-1, -1]),
+            high=np.array([1, 1]),
             dtype=np.float32
         )
 
         # Should be adjusted so that the effective speed of the robot is 0.2 m/s
         self.gain = gain
 
+        self.line = line
+
         # Directional trim adjustment
         self.trim = trim
+
+        self.register(GUI)
 
         # Wheel radius
         self.radius = radius
@@ -53,8 +61,10 @@ class DuckietownEnv(Simulator, threading.Thread):
         t = self.cur_angle
         x = self.cur_pos[0]
         y = self.cur_pos[2]
-        print("nächster punkt", point[i][1]/10, point[i][0]/10)
-        rot = np.arctan2((y - point[i][0]/10), (point[i][1]/10 - x))
+        print("nächster punkt", point[i][1] / 10, point[i][0] / 10)
+        rot = np.arctan2((y - point[i][0] / 10), (point[i][1] / 10 - x))
+        if t is None:
+            t = 0
         a = rot - t
         a = (a / abs(a)) * (abs(a) % (2 * np.pi))
         print(i, "t = ", t, "rot = ", rot, "a = ", a)
@@ -62,7 +72,7 @@ class DuckietownEnv(Simulator, threading.Thread):
             a = -2 * np.pi + a
             return a
         if (a < -np.pi):
-            a = 2 * np.pi - a
+            a = 2 * np.pi + a
             return a
         return a
 
@@ -87,18 +97,28 @@ class DuckietownEnv(Simulator, threading.Thread):
         tile_size = 1
         return rad - (tile_size / 20 - dist) * w
 
-    def startControl(self, line):
-        print("asd", line[0][1], line[0][0])
+    def run(self):
+        print("asd", self.line[0][1], self.line[0][0])
         io = 0
-        self.cur_pos = [line[0][1]/10, 0, line[0][0]/10]
+        self.cur_pos = [self.line[0][1] / 10, 0, self.line[0][0] / 10]
         self.cur_angle = np.pi / 2
 
-        my_map = DuckieMap("../../maps/udem1.yaml")
-        particle_number = 1000
+        my_map = DuckieMap("/home/jing/Desktop/GUI/maps/udem1.yaml")
+        particle_number = 25
         mcl = MCL(particle_number, my_map, self)
         mcl.spawn_particle_list(self.cur_pos, self.cur_angle)
         step_counter = 0
+        newAStar = False
         while True:
+            if io == len(self.line):
+                newAStar = True
+                continue
+            if newAStar:
+                print('new aStar starts')
+                self.cur_pos = [self.line[0][1] / 10, 0, self.line[0][0] / 10]
+                self.cur_angle = np.pi / 2
+                mcl.spawn_particle_list(self.cur_pos, self.cur_angle)
+                newAStar = False
             lane_pose = self.get_lane_pos2(self.cur_pos, self.cur_angle)
             print("self.cur_pose =")
             print(self.cur_pos)
@@ -108,22 +128,25 @@ class DuckietownEnv(Simulator, threading.Thread):
             print("dist = ", distance_to_road_center, " rad = ", angle_from_straight_in_rads)
 
             speed = 0.2
-            tol = 0.3
-            if (abs(self.cur_pos[0] - line[io][1]/10) <= tol and abs(self.cur_pos[2] - line[io][0]/10) <= tol):
+            tol = 0.15
+            if (abs(self.cur_pos[0] - self.line[io][1] / 10) <= tol and abs(self.cur_pos[2] - self.line[io][0] / 10) <= tol):
                 io = io + 1
-                if (io >= len(line)):
+                if (io == len(self.line)):
                     io = 0
-                    return
-            steering = self.global_angle_arr(line, io)
+                    self.line = []
+                    print('length of line', len(self.line))
+                    continue
+            steering = self.global_angle_arr(self.line, io)
             obs, reward, done, info = self.step([speed, steering])
             mcl.integrate_movement([speed, steering])
             step_counter += 1
             mcl.integrate_measurement(distance_to_road_center, angle_from_straight_in_rads)
             if step_counter % 2 == 0:
-                #start = time.time()
+                # start = time.time()
                 arr_chosenones, possible_location, possible_angle = mcl.resampling()
-                #end = time.time()
-                #duration = end - start
+                self.dispatch([arr_chosenones, self.cur_pos, self.cur_angle])
+                # end = time.time()
+                # duration = end - start
                 print("posloc and robot position", possible_location, self.cur_pos)
                 print('possible angle and robot angle', possible_angle, self.cur_angle)
                 mcl.weight_reset()
@@ -135,12 +158,6 @@ class DuckietownEnv(Simulator, threading.Thread):
             # print('Steps = %s, Timestep Reward=%.3f, Total Reward=%.3f' % (self.step_count, reward, total_reward))
 
             self.render()
-
-            if done:
-                if reward < 0:
-                    print('*** CRASHED ***')
-                break
-
 
     def step(self, action):
         vel, angle = action
