@@ -267,7 +267,7 @@ class GUI(threading.Thread, Subscriber):
         :return:
 
         """
-        print("so vile threads laufen", threading.active_count())
+        #print("so vile threads laufen", threading.active_count())
         if len(self.ovals) > 0:
             for o in self.ovals:
                 self.canvas.delete(o)
@@ -362,18 +362,18 @@ class GUI(threading.Thread, Subscriber):
         offy = 36 / 2
 
         pointx1 = pos[0] + (np.cos(angle) * -offx - np.sin(angle) * offy)
-        pointy1 = pos[1] + (np.sin(angle) * -offx + np.cos(angle) * offy)
+        pointy1 = pos[1] - (np.sin(angle) * -offx + np.cos(angle) * offy)
 
         pointx2 = pos[0] + (np.cos(angle) * -offx - np.sin(angle) * -offy)
-        pointy2 = pos[1] + (np.sin(angle) * -offx + np.cos(angle) * -offy)
+        pointy2 = pos[1] - (np.sin(angle) * -offx + np.cos(angle) * -offy)
 
         pointx3 = pos[0] + (np.cos(angle) * offx - np.sin(angle) * -offy)
-        pointy3 = pos[1] + (np.sin(angle) * offx + np.cos(angle) * -offy)
+        pointy3 = pos[1] - (np.sin(angle) * offx + np.cos(angle) * -offy)
 
         pointx4 = pos[0] + (np.cos(angle) * offx - np.sin(angle) * offy)
-        pointy4 = pos[1] + (np.sin(angle) * offx + np.cos(angle) * offy)
+        pointy4 = pos[1] - (np.sin(angle) * offx + np.cos(angle) * offy)
 
-        return [[pointx3, pointy3], [pointx4, pointy4], [pointx1, pointy1], [pointx3, pointy3]]
+        return [[pointx1, pointy1], [pointx2, pointy2], [pointx3, pointy3], [pointx4, pointy4]]
 
     def main(self):
         self.set_gui_label_buttons()
