@@ -37,7 +37,7 @@ class GUI(threading.Thread, Subscriber):
         self.end_point = tk.StringVar()
         self.display_speed = tk.StringVar()
 
-        #self.myduckietown = DuckietownEnv(GUI=self, domain_rand=False, draw_bbox=False, map_name="udem1")
+        self.myduckietown = DuckietownEnv(GUI=self, domain_rand=False, draw_bbox=False, map_name="udem1")
         self.START = [0, 0]
         self.END = [0, 0]
         self.start = []
@@ -298,8 +298,11 @@ class GUI(threading.Thread, Subscriber):
         #self.myduckietown.render()
         #self.myduckietown.startControl(line)
         #self.root.lift()
-        t = DuckietownEnv(line=line, GUI=self, domain_rand=False, draw_bbox=False, map_name="udem1")
-        t.start()
+        #t = DuckietownEnv(line=line, GUI=self, domain_rand=False, draw_bbox=False, map_name="udem1")
+        self.myduckietown.line = line
+        print('status of thread', self.myduckietown.is_alive())
+        if not self.myduckietown.is_alive():
+            self.myduckietown.start()
         # self.root.mainloop()
         # t = Process(target=self.move_ducky, args=(line,))
         # t.join()

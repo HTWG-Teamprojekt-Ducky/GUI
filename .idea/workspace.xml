@@ -19,23 +19,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df86c819-72d1-4c1d-aaf3-e5ae1586a7bf" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Observer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gym-duckietown/gym_duckietown/envs/_init_.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gym-envs/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lokalisierung/Ducky_map.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lokalisierung/MCL.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lokalisierung/Particle.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lokalisierung/Tile.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lokalisierung/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lokalisierung/udem1.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gym_test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gym_test.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="df86c819-72d1-4c1d-aaf3-e5ae1586a7bf" name="Default Changelist" comment="integrated mcl in controller and gui">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gym-duckietown/gym_duckietown/envs/duckietown_env.py" beforeDir="false" afterPath="$PROJECT_DIR$/lokalisierung/duckietown_env.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/astar.py" beforeDir="false" afterPath="$PROJECT_DIR$/modules/astar.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -250,7 +236,14 @@
       <option name="project" value="LOCAL" />
       <updated>1599233448459</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="integrated mcl in controller and gui">
+      <created>1601930305029</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1601930305029</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TodoView">
@@ -279,37 +272,66 @@
     <MESSAGE value="++ repo modification ++" />
     <MESSAGE value="++ added actual and local coordinates tiles and added changed calculations ++" />
     <MESSAGE value="++ formatted main gui file ++" />
-    <option name="LAST_COMMIT_MESSAGE" value="++ formatted main gui file ++" />
+    <MESSAGE value="integrated mcl in controller and gui" />
+    <option name="LAST_COMMIT_MESSAGE" value="integrated mcl in controller and gui" />
   </component>
   <component name="WindowStateProjectService">
     <state x="589" y="201" width="732" height="637" key="#Inspections" timestamp="1601908043604">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
     <state x="589" y="201" width="732" height="637" key="#Inspections/0.27.1920.988@0.27.1920.988" timestamp="1601908043604" />
+    <state x="499" y="68" width="912" height="904" key="CommitChangelistDialog2" timestamp="1601930538759">
+      <screen x="0" y="27" width="1920" height="988" />
+    </state>
+    <state x="499" y="68" width="912" height="904" key="CommitChangelistDialog2/0.27.1920.988@0.27.1920.988" timestamp="1601930538759" />
     <state x="743" y="278" width="424" height="484" key="FileChooserDialogImpl" timestamp="1601911629863">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
     <state x="743" y="278" width="424" height="484" key="FileChooserDialogImpl/0.27.1920.988@0.27.1920.988" timestamp="1601911629863" />
-    <state width="1897" height="181" key="GridCell.Tab.0.bottom" timestamp="1601919082761">
+    <state width="1897" height="181" key="GridCell.Tab.0.bottom" timestamp="1601994625686">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
-    <state width="1897" height="181" key="GridCell.Tab.0.bottom/0.27.1920.988@0.27.1920.988" timestamp="1601919082761" />
-    <state width="1897" height="181" key="GridCell.Tab.0.center" timestamp="1601919082760">
+    <state width="1897" height="181" key="GridCell.Tab.0.bottom/0.27.1920.988@0.27.1920.988" timestamp="1601994625686" />
+    <state width="1897" height="181" key="GridCell.Tab.0.center" timestamp="1601994625685">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
-    <state width="1897" height="181" key="GridCell.Tab.0.center/0.27.1920.988@0.27.1920.988" timestamp="1601919082760" />
-    <state width="1897" height="181" key="GridCell.Tab.0.left" timestamp="1601919082760">
+    <state width="1897" height="181" key="GridCell.Tab.0.center/0.27.1920.988@0.27.1920.988" timestamp="1601994625685" />
+    <state width="1897" height="181" key="GridCell.Tab.0.left" timestamp="1601994625685">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
-    <state width="1897" height="181" key="GridCell.Tab.0.left/0.27.1920.988@0.27.1920.988" timestamp="1601919082760" />
-    <state width="1897" height="181" key="GridCell.Tab.0.right" timestamp="1601919082761">
+    <state width="1897" height="181" key="GridCell.Tab.0.left/0.27.1920.988@0.27.1920.988" timestamp="1601994625685" />
+    <state width="1897" height="181" key="GridCell.Tab.0.right" timestamp="1601994625686">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
-    <state width="1897" height="181" key="GridCell.Tab.0.right/0.27.1920.988@0.27.1920.988" timestamp="1601919082761" />
+    <state width="1897" height="181" key="GridCell.Tab.0.right/0.27.1920.988@0.27.1920.988" timestamp="1601994625686" />
+    <state width="1897" height="255" key="GridCell.Tab.1.bottom" timestamp="1601991674063">
+      <screen x="0" y="27" width="1920" height="988" />
+    </state>
+    <state width="1897" height="255" key="GridCell.Tab.1.bottom/0.27.1920.988@0.27.1920.988" timestamp="1601991674063" />
+    <state width="1897" height="255" key="GridCell.Tab.1.center" timestamp="1601991674062">
+      <screen x="0" y="27" width="1920" height="988" />
+    </state>
+    <state width="1897" height="255" key="GridCell.Tab.1.center/0.27.1920.988@0.27.1920.988" timestamp="1601991674062" />
+    <state width="1897" height="255" key="GridCell.Tab.1.left" timestamp="1601991674062">
+      <screen x="0" y="27" width="1920" height="988" />
+    </state>
+    <state width="1897" height="255" key="GridCell.Tab.1.left/0.27.1920.988@0.27.1920.988" timestamp="1601991674062" />
+    <state width="1897" height="255" key="GridCell.Tab.1.right" timestamp="1601991674062">
+      <screen x="0" y="27" width="1920" height="988" />
+    </state>
+    <state width="1897" height="255" key="GridCell.Tab.1.right/0.27.1920.988@0.27.1920.988" timestamp="1601991674062" />
     <state x="449" y="155" key="SettingsEditor" timestamp="1601902894482">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
     <state x="449" y="155" key="SettingsEditor/0.27.1920.988@0.27.1920.988" timestamp="1601902894482" />
+    <state x="555" y="256" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1601930659476">
+      <screen x="0" y="27" width="1920" height="988" />
+    </state>
+    <state x="555" y="256" width="800" height="528" key="Vcs.Push.Dialog.v2/0.27.1920.988@0.27.1920.988" timestamp="1601930659476" />
+    <state x="741" y="435" width="428" height="170" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1601983125163">
+      <screen x="0" y="27" width="1920" height="988" />
+    </state>
+    <state x="741" y="435" width="428" height="170" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.27.1920.988@0.27.1920.988" timestamp="1601983125163" />
     <state x="685" y="434" width="540" height="172" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1601911027336">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
