@@ -3,7 +3,7 @@
 import threading
 import tkinter as tk
 import numpy as np
-from gym_duckietown.envs.duckietown_env import DuckietownEnv
+from lokalisierung.duckietown_env import DuckietownEnv
 from modules import astar, navigation, grid, mapping, findpath
 import time
 from Observer import Subscriber

@@ -6,8 +6,8 @@ from gym import spaces
 
 from lokalisierung.Ducky_map import DuckieMap
 from lokalisierung.MCL import MCL
-from .. import logger
-from ..simulator import Simulator
+from gym_duckietown import logger
+from gym_duckietown.simulator import Simulator
 from Observer import Publisher
 
 
@@ -103,7 +103,7 @@ class DuckietownEnv(Simulator, threading.Thread, Publisher):
         self.cur_pos = [self.line[0][1] / 10, 0, self.line[0][0] / 10]
         self.cur_angle = np.pi / 2
 
-        my_map = DuckieMap("/home/jing/Desktop/GUI/maps/udem1.yaml")
+        my_map = DuckieMap("maps/udem1.yaml")
         particle_number = 25
         mcl = MCL(particle_number, my_map, self)
         mcl.spawn_particle_list(self.cur_pos, self.cur_angle)

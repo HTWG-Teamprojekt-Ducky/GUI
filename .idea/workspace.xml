@@ -19,7 +19,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df86c819-72d1-4c1d-aaf3-e5ae1586a7bf" name="Default Changelist" comment="" />
+    <list default="true" id="df86c819-72d1-4c1d-aaf3-e5ae1586a7bf" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lokalisierung/duckietown_env.py" beforeDir="false" afterPath="$PROJECT_DIR$/lokalisierung/duckietown_env.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -55,19 +59,20 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lokalisierung" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/lokalisierung" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="C:\Users\anim_\Documents\gym_test\ducky_pictures" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/lokalisierung" />
       <recent name="$PROJECT_DIR$/gym-duckietown/gym_duckietown/envs" />
       <recent name="$PROJECT_DIR$/gym-envs" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="C:\Users\anim_\Documents\gym_test\ducky_pictures" />
     </key>
   </component>
   <component name="RunManager" selected="Python.gui">
@@ -247,7 +252,14 @@
       <option name="project" value="LOCAL" />
       <updated>1601997966948</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="modified duckietown_env.py">
+      <created>1602011921393</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1602011921393</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TodoView">
@@ -278,37 +290,38 @@
     <MESSAGE value="++ formatted main gui file ++" />
     <MESSAGE value="integrated mcl in controller and gui" />
     <MESSAGE value="fixed multi windows of duckietown env bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed multi windows of duckietown env bug" />
+    <MESSAGE value="modified duckietown_env.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="modified duckietown_env.py" />
   </component>
   <component name="WindowStateProjectService">
     <state x="589" y="201" width="732" height="637" key="#Inspections" timestamp="1601908043604">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
     <state x="589" y="201" width="732" height="637" key="#Inspections/0.27.1920.988@0.27.1920.988" timestamp="1601908043604" />
-    <state x="499" y="68" width="912" height="904" key="CommitChangelistDialog2" timestamp="1601997966802">
+    <state x="499" y="68" width="912" height="904" key="CommitChangelistDialog2" timestamp="1602011921250">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
-    <state x="499" y="68" width="912" height="904" key="CommitChangelistDialog2/0.27.1920.988@0.27.1920.988" timestamp="1601997966802" />
+    <state x="499" y="68" width="912" height="904" key="CommitChangelistDialog2/0.27.1920.988@0.27.1920.988" timestamp="1602011921250" />
     <state x="743" y="278" width="424" height="484" key="FileChooserDialogImpl" timestamp="1601911629863">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
     <state x="743" y="278" width="424" height="484" key="FileChooserDialogImpl/0.27.1920.988@0.27.1920.988" timestamp="1601911629863" />
-    <state width="1897" height="255" key="GridCell.Tab.0.bottom" timestamp="1601997981014">
+    <state width="1897" height="181" key="GridCell.Tab.0.bottom" timestamp="1602018486704">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
-    <state width="1897" height="255" key="GridCell.Tab.0.bottom/0.27.1920.988@0.27.1920.988" timestamp="1601997981014" />
-    <state width="1897" height="255" key="GridCell.Tab.0.center" timestamp="1601997981013">
+    <state width="1897" height="181" key="GridCell.Tab.0.bottom/0.27.1920.988@0.27.1920.988" timestamp="1602018486704" />
+    <state width="1897" height="181" key="GridCell.Tab.0.center" timestamp="1602018486703">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
-    <state width="1897" height="255" key="GridCell.Tab.0.center/0.27.1920.988@0.27.1920.988" timestamp="1601997981013" />
-    <state width="1897" height="255" key="GridCell.Tab.0.left" timestamp="1601997981013">
+    <state width="1897" height="181" key="GridCell.Tab.0.center/0.27.1920.988@0.27.1920.988" timestamp="1602018486703" />
+    <state width="1897" height="181" key="GridCell.Tab.0.left" timestamp="1602018486703">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
-    <state width="1897" height="255" key="GridCell.Tab.0.left/0.27.1920.988@0.27.1920.988" timestamp="1601997981013" />
-    <state width="1897" height="255" key="GridCell.Tab.0.right" timestamp="1601997981013">
+    <state width="1897" height="181" key="GridCell.Tab.0.left/0.27.1920.988@0.27.1920.988" timestamp="1602018486703" />
+    <state width="1897" height="181" key="GridCell.Tab.0.right" timestamp="1602018486703">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
-    <state width="1897" height="255" key="GridCell.Tab.0.right/0.27.1920.988@0.27.1920.988" timestamp="1601997981013" />
+    <state width="1897" height="181" key="GridCell.Tab.0.right/0.27.1920.988@0.27.1920.988" timestamp="1602018486703" />
     <state width="1897" height="255" key="GridCell.Tab.1.bottom" timestamp="1601997981014">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
@@ -329,10 +342,10 @@
       <screen x="0" y="27" width="1920" height="988" />
     </state>
     <state x="449" y="155" key="SettingsEditor/0.27.1920.988@0.27.1920.988" timestamp="1601902894482" />
-    <state x="555" y="256" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1601997972676">
+    <state x="555" y="256" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1602011923443">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
-    <state x="555" y="256" width="800" height="528" key="Vcs.Push.Dialog.v2/0.27.1920.988@0.27.1920.988" timestamp="1601997972676" />
+    <state x="555" y="256" width="800" height="528" key="Vcs.Push.Dialog.v2/0.27.1920.988@0.27.1920.988" timestamp="1602011923443" />
     <state x="741" y="435" width="428" height="170" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1601983125163">
       <screen x="0" y="27" width="1920" height="988" />
     </state>
